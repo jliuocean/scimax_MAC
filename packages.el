@@ -598,6 +598,15 @@
 
 ;; We load one file: user.el
 
+(use-package ox-ipynb
+  :ensure nil
+  :load-path (lambda () (expand-file-name "ox-ipynb" scimax-dir))
+  :bind ("H-x" . ox-ipynb/body)
+  :init
+  (add-to-list 'load-path
+               (expand-file-name "ox-ipynb" scimax-dir))
+  (require 'ox-ipynb))
+
 (when (and
        scimax-load-user-dir
        (file-exists-p (expand-file-name "user.el" scimax-user-dir)))
