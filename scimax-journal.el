@@ -21,7 +21,7 @@
   (require 'rg))
 (require 'scimax-org)
 
-(defvar scimax-journal-root-dir "~/vc/journal"
+(defvar scimax-journal-root-dir "~/myrepo/org/journal/"
   "Directory for journal entries.")
 
 (unless (file-directory-p scimax-journal-root-dir)
@@ -102,6 +102,7 @@ Argument REGEX the pattern to grep for."
   ("g" scimax-journal-grep "grep journal")
   ("h" scimax-journal-open-heading "Open to heading"))
 
+(global-set-key (kbd "H-j") 'scimax-journal/body)
 (provide 'scimax-journal)
 
 ;;; scimax-journal.el ends here
