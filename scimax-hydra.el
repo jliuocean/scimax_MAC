@@ -212,7 +212,7 @@ _k_: list packages _m_: compose mail
 	 (mu4e)))
   ("f" finder)
   ("i" messages)
-  ("j" scimax-journal/body)
+  ("j" (scimax-open-hydra scimax-journal/body) "journal")
   ("k" package-list-packages)
   ("m" compose-mail)
   ("n" ivy-contacts)
