@@ -711,7 +711,7 @@ citecolor=blue,filecolor=blue,menucolor=blue,urlcolor=blue"
 
 ;; avoid getting \maketitle right after begin{document}
 ;; you should put \maketitle if and where you want it.
-(setq org-latex-title-command "")
+;;;(setq org-latex-title-command "") ; ljl, Oct/14/2019
 
 (setq org-latex-prefer-user-labels t)
 
