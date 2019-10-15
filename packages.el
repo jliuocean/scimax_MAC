@@ -570,6 +570,11 @@
   :ensure nil
   :load-path scimax-dir)
 
+(use-package scimax-journal
+  :ensure nil
+  :load-path scimax-dir
+  :bind ("H-j" . scimax-journal/body))
+
 (use-package scimax-hydra
   :ensure nil
   :load-path scimax-dir
