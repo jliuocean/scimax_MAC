@@ -1,9 +1,9 @@
 ;;; scimax-org.el --- org-mode configuration for scimax	-*- lexical-binding:t ; -*-
 
-;;; Commentary:
+ ;;; Commentary:
 
 
-;;; Code:
+ ;;; Code:
 (require 'org)
 (require 'ox-latex)
 (require 'org-inlinetask)
@@ -32,9 +32,184 @@
 (setq org-src-tab-acts-natively t)
 
 ;; * Speed commands
-(setq org-todo-keywords
-      '((sequence "TODO(t)" "|" "DONE(d)")))
+;; (setq org-todo-keywords
+;; '((sequence "TODO(t)" " """ "|" "DONE(d)")))
 
+;; * My own org setup , add on Jun/08/2018;; org-capture
+(setq org-todo-keywords
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+
+(setq org-todo-keyword-faces
+      (quote (("TODO" :foreground "red" :weight bold)
+              ("NEXT" :foreground "blue" :weight bold)
+              ("DONE" :foreground "forest green" :weight bold)
+              ("WAITING" :foreground "orange" :weight bold)
+              ("HOLD" :foreground "magenta" :weight bold)
+              ("CANCELLED" :foreground "yellow" :weight bold)
+              ("MEETING" :foreground "oliva" :weight bold)
+              ("PHONE" :foreground "pink" :weight bold))))
+(setq org-use-fast-todo-selection t)
+
+(setq org-directory "~/myrepo/org")
+;; (let ((org-agenda-directory  "~/myrepo/org/"))
+                                        ;  (normal-top-level-add-subdirs-to-load-path))
+
+;; ** refile setup
+(setq org-default-notes-file (concat org-directory "/gtd/refile.org"))
+
+;; ** org-journal
+;; (setq org-journal-dir "~/myrepo/org/journal/")
+;; (setq org-journal-enable-agenda-integration t)
+
+;; ** org-agenda-files, add on Jun/10/2018
+(load-library "find-lisp")
+(setq org-agenda-files
+      (find-lisp-find-files "~/myrepo/org/" "\.org$"))
+
+;; targets include this file and any file contributing to the agenda, up to 9 levels deep
+(setq org-refile-targets (quote (("~/myrepo/org/gtd/refile.org" :maxlevel . 1)
+                                 ("~/myrepo/org/gtd/definition.org" :maxlevel . 1)
+                                 ("~/myrepo/org/gtd/idea.org" :maxlevel . 1)
+                                 ("~/myrepo/org/gtd/les.org" :maxlevel . 1)
+                                 )))
+
+
+;; ** org-capture
+
+(setq org-capture-templates
+      (quote (("n" "Notes" entry (file "~/myrepo/org/gtd/notes.org")
+               "* %?%^G\n  :PROPERTIES:\n  :ENTERED_ON: %T\n  :END:\n%i\n")
+              ("i" "Ideas" entry (file "~/myrepo/org/gtd/ideas.org")
+               "* %?%^G\n  :PROPERTIES:\n  :ENTERED_ON: %T\n  :END:\n%i\n")
+	            ("c" "Courses" entry (file "~/myrepo/org/gtd/courses.org")
+               "* %?%^G\n  :PROPERTIES:\n  :ENTERED_ON: %T\n  :END:\n%i\n")
+	            ("t" "Todo" entry (file org-default-notes-file)
+               "* %?%^G\n  :PROPERTIES:\n  :ENTERED_ON: %T\n  :END:\n%i\n")
+	            ("p" "Projects" entry (file org-default-notes-file)
+               "* %?%^G\n  :PROPERTIES:\n  :ENTERED_ON: %T\n  :END:\n%i\n")
+              ;; ("j" "Journal" entry (file
+              ;;                       (expand-file-name (concat (format-time-string "%Y%m%d") ".org")  org-journal-dir))
+              ;;  "* Tasks%?\n* Exercise\n* Meal plan"))
+	            )
+             )
+      )
+
+
+;; (setq org-remember-templates
+;;       '(
+;;         ("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\nAdded: %U\n" "~/org/gtd/newgtd.org" "Tasks" :clock-in t :clock-resume t)
+;;         ("Idea" ?i "\n* %^{topic} %T %^g\n%?\nAdded: %U\n" "~/org/gtd/journal.org" "Idea")
+;;         ("Concept" ?c "\n* %T %^{topic} %^g\n%?\nAdded: %U\n" "~/org/gtd/concept.org" "Concpet")
+;;         ("Diary" ?d "\n* %T %^{topic} %^g\n%?\n#+BEGIN_COMMENT \nEntered on: %U \n#+END_COMMENT" "~/org/gtd/journal.org" "Diary")
+;;         ("Project" ?p "* TODO %^{Brief Description} %^g\n%?\nAdded: %U\n" "~/org/gtd/newgtd.org" "Project" :clock-in t :clock-resume t)
+;;         ("Summary today" ?s "\n* %T %^{topic} %^g\n%?\nAdded: %U\n" "~/org/gtd/journal.org" "Summary")
+;;         ("Journal" ?j "\n* %^{topic} %^g\n%?\nAdded: %U\n" "~/org/gtd/journal.org" "Journal")
+;;         ("Notes" ?n "\n* %^{topic} %^g\n%?\nAdded: %U\n" "~/org/gtd/journal.org" "Notes")
+;;         ))
+;; (setq org-todo-keyword-faces
+;;       (quote (("TODO" :foreground "red" :weight bold)
+;;               ("NEXT" :foreground "blue" :weight bold)
+;;               ("DONE" :foreground "forest green" :weight bold)
+;;               ("WAITIN fsG" :foreground "orange" :weight bold)
+;;               ("HOLD" :foreground "magenta" :weight bold)
+;;               ("CANCELLED" :foreground "yellow" :weight bold)
+;;               ("MEETING" :foreground "oliva" :weight bold)
+;;               ("PHONE" :foreground "pink" :weight bold))))
+
+;; (setq org-todo-state-tags-triggers
+;;       (quote (("CANCELLED" ("CANCELLED" . t))
+;;               ("WAITING" ("WAITING" . t))
+;;               ("HOLD" ("WAITING") ("HOLD" . t))
+;;               (done ("WAITING") ("HOLD"))
+;;               ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+;;               ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+;;               ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+
+(setq org-agenda-exporter-settings
+      '((ps-number-of-columns 1)
+        (ps-landscape-mode t)
+        (htmlize-output-type 'css)))
+
+;; Do not dim blocked tasks
+(setq org-agenda-dim-blocked-tasks nil)
+
+;; Compact the block agenda view
+(setq org-agenda-compact-blocks t)
+(setq org-agenda-custom-commands
+      '(
+        ("P" "Projects"
+         ((agenda)
+          (tags-todo "PROJECT")
+          (tags-todo "READING")
+          (tags-todo "MANUSCRIPT")
+          (tags-todo "EXPERIMENT")
+          (tags-todo "ANALYSIS")))
+
+        ("H" "Office and Home Lists"
+         ((agenda)
+          (tags-todo "OFFICE")
+          (tags-todo "COURSES")
+          (tags-todo "PROJECT")
+          (tags-todo "READING")
+          (tags-todo "HOME")))
+        ("D" "Daily Action List"
+         (
+          (agenda "" ((org-agenda-ndays 1)
+                      (org-agenda-sorting-strategy
+                       (quote ((agenda time-up priority-down tag-up) )))
+                      (org-deadline-warning-days 7)
+                      ))))
+        )
+      )
+ (defun gtd ()
+   (interactive)
+   (find-file "~/myrepo/org/gtd/refile.org")
+   )
+;; (defun journal_ljl ()
+;;   (interactive)
+;;   (find-file "~/org/gtd/journal.org")
+;;   )
+;; (defun exp_record ()
+;;   (interactive)
+;;   (find-file "~/org/gtd/exp_record.org")
+;;   )
+(defun idea ()
+  (interactive)
+  (find-file "~/myrepo/org/gtd/idea.org")
+  )
+;; (defun manu1 ()
+;;   (interactive)
+;;   (find-file "~/ljl_article/Effect_of_planetary_rotation_on_oceanic_surface_boundary_layer_turbulence.tex"))
+(defun les ()
+  (interactive)
+  (find-file "~/myrepo/org/gtd/les.org")
+  )
+
+;; ** My shortcut in org-mode
+;; Standard key bindings
+;; (define-key global-map "\C-c c" 'org-capture)
+;; (global-set-key (kbd "C-c l") 'org-store-link)
+;; (define-key global-map "\C-ca" 'org-agenda)
+;; (global-set-key (kbd "C-c b") 'org-iswitchb)
+ (global-set-key (kbd "C-c g") 'gtd)
+;; (global-set-key (kbd "C-c j") 'journal_ljl)
+;; (global-set-key (kbd "C-c e") 'exp_record)
+;; (global-set-key (kbd "C-c m") 'manu1)
+ (global-set-key (kbd "C-c i") 'idea)
+ (global-set-key (kbd "C-c l") 'les)
+;; (global-set-key (kbd "<f12>") 'org-agenda)
+;; (global-set-key (kbd "C-M-r") 'org-capture)
+ (global-set-key (kbd "<f5>") 'org-todo)
+(add-hook 'org-agenda-mode-hook 'hl-line-mode)
+
+(setq org-blank-before-new-entry '((heading . t) (plain-list-item . nil))) 
+;----------------------------------------------
+(setq org-icalendar-include-todo t)
+(setq org-icalendar-store-UID t)
+(setq org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo))
+(setq org-icalendar-use-deadline '(todo-due event-if-todo event-if-not-todo))
+;;==================================================================
 
 (setq org-use-speed-commands t)
 
@@ -124,18 +299,21 @@ is positive, move after, and if negative, move before."
 
 ;; * Agenda setup
 ;; record time I finished a task when I change it to DONE
+
+;;---------------------------------------------
+
 (setq org-log-done 'time)
 
 ;; I don't want to see things that are done. turn that off here.
 ;; http://orgmode.org/manual/Global-TODO-list.html#Global-TODO-list
-(setq org-agenda-skip-scheduled-if-done t)
-(setq org-agenda-skip-deadline-if-done t)
-(setq org-agenda-skip-timestamp-if-done t)
-(setq org-agenda-todo-ignore-scheduled t)
-(setq org-agenda-todo-ignore-deadlines t)
-(setq org-agenda-todo-ignore-timestamp t)
-(setq org-agenda-todo-ignore-with-date t)
-(setq org-agenda-start-on-weekday nil) ;; start on current day
+;(setq org-agenda-skip-scheduled-if-done t)
+;(setq org-agenda-skip-deadline-if-done t)
+;(setq org-agenda-skip-timestamp-if-done t)
+;(setq org-agenda-todo-ignore-scheduled t)
+;(setq org-agenda-todo-ignore-deadlines t)
+;(setq org-agenda-todo-ignore-timestamp t)
+;(setq org-agenda-todo-ignore-with-date t)
+;(setq org-agenda-start-on-weekday nil) ;; start on current day
 
 (setq org-upcoming-deadline '(:foreground "blue" :weight bold))
 
